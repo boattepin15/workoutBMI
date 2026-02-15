@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}ประวัติการวิเคราะห์ - Workout BMI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4"><i class="fas fa-history me-2"></i> ประวัติการวิเคราะห์รูปร่าง</h2>
+        
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>วันที่/เวลา</th>
+                                <th>BMI</th>
+                                <th>เกณฑ์</th>
+                                <th>รูปร่าง</th>
+                                <th>WHR</th>
+                                <th class="text-end">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in analyses %}
+                            <tr>
+                                <td>{{ item.created_at|date:"d/m/Y H:i" }}</td>
+                                <td><span class="fw-bold">{{ item.bmi }}</span></td>
+                                <td>
+                                    <span class="badge bg-{% if 'อ้วน' in item.bmi_status %}danger{% elif 'น้ำหนักเกิน' in item.bmi_status %}warning{% elif 'สมส่วน' in item.bmi_status %}success{% else %}info{% endif %}">
+                                        {{ item.bmi_status }}
+                                    </span>
+                                </td>
+                                <td>{{ item.body_shape }}</td>
+                                <td>{{ item.whr }}</td>
+                                <td class="text-end">
+                                    <a href="{% url 'analysis_result' item.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> ดูผลลัพธ์
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="fas fa-search display-6 mb-3 d-block"></i>
+                                    ยังไม่มีประวัติการวิเคราะห์
+                                    <div class="mt-3">
+                                        <a href="{% url 'analysis_create' %}" class="btn btn-primary">เริ่มวิเคราะห์เลย</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

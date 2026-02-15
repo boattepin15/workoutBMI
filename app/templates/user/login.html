@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% load crispy_forms_tags %} {% block title %}
+เข้าสู่ระบบ - Workout BMI {% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm border-0 mt-5">
+      <div class="card-body p-4">
+        <h3 class="card-title text-center mb-4 text-primary fw-bold">
+          เข้าสู่ระบบ
+        </h3>
+        <form method="post">
+          {% csrf_token %} {{ form|crispy }}
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+              เข้าสู่ระบบ
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer text-center bg-transparent py-3">
+        <small class="text-muted">
+          ยังไม่มีบัญชี?
+          <a href="{% url 'register' %}" class="text-decoration-none"
+            >ลงทะเบียน</a
+          >
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ผลการวิเคราะห์ - Workout BMI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i> ผลการวิเคราะห์รูปร่าง</h4>
+            </div>
+            <div class="card-body p-4">
+                
+                <div class="row text-center mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-primary">
+                            <div class="card-body">
+                                <h6 class="text-muted">BMI (ดัชนีมวลกาย)</h6>
+                                <h2 class="display-6 fw-bold text-primary">{{ analysis.bmi }}</h2>
+                                <span class="badge bg-{% if 'อ้วน' in analysis.bmi_status %}danger{% elif 'น้ำหนักเกิน' in analysis.bmi_status %}warning{% elif 'สมส่วน' in analysis.bmi_status %}success{% else %}info{% endif %} fs-6">
+                                    {{ analysis.bmi_status }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-info">
+                            <div class="card-body">
+                                <h6 class="text-muted">WHR (สัดส่วนเอว/สะโพก)</h6>
+                                <h2 class="display-6 fw-bold text-info">{{ analysis.whr }}</h2>
+                                <p class="mb-0 text-muted small">เกณฑ์มาตรฐาน: < 0.80 (หญิง)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-warning">
+                            <div class="card-body">
+                                <h6 class="text-muted">รูปร่างของคุณ</h6>
+                                <h2 class="display-6 fw-bold text-warning">{{ analysis.body_shape }}</h2>
+                                <i class="fas fa-user-check fa-2x text-muted mt-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h4 class="mt-4 mb-3 text-secondary"><i class="fas fa-dumbbell me-2"></i> โปรแกรมแนะนำสำหรับ {{ analysis.body_shape }}</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" style="width: 20%;">ตัวอย่าง</th>
+                                <th style="width: 30%;">ท่าออกกำลังกาย</th>
+                                <th class="text-center">เซ็ต (Sets)</th>
+                                <th class="text-center">ครั้ง/เวลา (Reps/Time)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for workout in analysis.get_workout_schedule %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if workout.image %}
+                                        <img src="{% static 'images/'|add:analysis.get_image_folder|add:'/'|add:workout.image %}" 
+                                             alt="{{ workout.exercise }}" 
+                                             class="img-fluid rounded shadow-sm"
+                                             style="max-height: 100px; width: auto;">
+                                    {% else %}
+                                        <span class="text-muted"><i class="fas fa-image"></i></span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ workout.exercise }}</td>
+                                <td class="text-center">{{ workout.sets }}</td>
+                                <td class="text-center">{{ workout.reps }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-3">ไม่พบข้อมูลโปรแกรมแนะนำ</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'analysis_create' %}" class="btn btn-outline-secondary me-md-2">วิเคราะห์ใหม่</a>
+                    <a href="{% url 'home' %}" class="btn btn-primary">กลับหน้าหลัก</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
